@@ -22,14 +22,10 @@ Geekplus / Seer robots are widely used in goods-to-person and tote-moving applic
 This adapter connects via their REST API (common in warehouse deployments).
 """
 
-import asyncio
-import logging
 from typing import Any, Dict, Optional
 
 import aiohttp
-
 from mosoro_core.base_adapter import BaseMosoroAdapter
-from mosoro_core.models import MosoroPayload, Position
 
 
 class GeekplusAdapter(BaseMosoroAdapter):
@@ -39,7 +35,7 @@ class GeekplusAdapter(BaseMosoroAdapter):
     Follows the same pattern as LocusAdapter and StretchAdapter.
     """
 
-    vendor_name = "geekplus"   # Used by auto-discovery
+    vendor_name = "geekplus"  # Used by auto-discovery
 
     def __init__(self, robot_id: str, config: Dict[str, Any]):
         super().__init__(robot_id, config)
@@ -81,21 +77,23 @@ class GeekplusAdapter(BaseMosoroAdapter):
                         "x": data.get("x", 0.0),
                         "y": data.get("y", 0.0),
                         "theta": data.get("theta", 0.0),
-                        "map_id": data.get("current_map")
+                        "map_id": data.get("current_map"),
                     },
                     "battery": data.get("battery_percent", 0.0),
                     "status": self._map_geekplus_status(data.get("status", "unknown")),
                     "current_task": {
                         "task_id": data.get("current_task_id"),
                         "task_type": data.get("task_type", "unknown"),
-                        "progress": data.get("task_progress", 0.0)
-                    } if data.get("current_task_id") else None,
+                        "progress": data.get("task_progress", 0.0),
+                    }
+                    if data.get("current_task_id")
+                    else None,
                     "health": "good" if not data.get("fault_code") else "warning",
                     "vendor_specific": {
                         "geekplus_status": data.get("status"),
                         "load_weight": data.get("load_weight_kg"),
-                        "speed": data.get("current_speed")
-                    }
+                        "speed": data.get("current_speed"),
+                    },
                 }
         except Exception as e:
             self.logger.error(f"Failed to fetch Geekplus status for {self.robot_id}: {e}")
@@ -110,7 +108,7 @@ class GeekplusAdapter(BaseMosoroAdapter):
             "CHARGING": "charging",
             "ERROR": "error",
             "PAUSED": "idle",
-            "OFFLINE": "offline"
+            "OFFLINE": "offline",
         }
         return mapping.get(raw_status.upper(), "idle")
 
@@ -127,7 +125,7 @@ class GeekplusAdapter(BaseMosoroAdapter):
                 payload = {
                     "x": command["position"]["x"],
                     "y": command["position"]["y"],
-                    "theta": command["position"].get("theta", 0.0)
+                    "theta": command["position"].get("theta", 0.0),
                 }
                 async with self.session.post(
                     f"{self.api_base}/robots/{self.robot_id}/navigate", json=payload
@@ -135,11 +133,13 @@ class GeekplusAdapter(BaseMosoroAdapter):
                     return resp.status in (200, 202)
 
             elif action == "pause":
-                async with self.session.post(f"{self.api_base}/robots/{self.robot_id}/pause") as resp:
+                url = f"{self.api_base}/robots/{self.robot_id}/pause"
+                async with self.session.post(url) as resp:
                     return resp.status in (200, 202)
 
             elif action == "resume":
-                async with self.session.post(f"{self.api_base}/robots/{self.robot_id}/resume") as resp:
+                url = f"{self.api_base}/robots/{self.robot_id}/resume"
+                async with self.session.post(url) as resp:
                     return resp.status in (200, 202)
 
             self.logger.warning(f"Unsupported command action: {action}")

@@ -29,14 +29,10 @@ Fetch REST API reference:
     PUT  /api/v1/robots/{id}/action  - Send action (pause, resume, etc.)
 """
 
-import asyncio
-import logging
 from typing import Any, Dict, Optional
 
 import aiohttp
-
 from mosoro_core.base_adapter import BaseMosoroAdapter
-from mosoro_core.models import MosoroMessage
 
 
 class FetchAdapter(BaseMosoroAdapter):
@@ -102,7 +98,9 @@ class FetchAdapter(BaseMosoroAdapter):
                         "task_id": data.get("current_task_id"),
                         "task_type": data.get("task_type", "unknown"),
                         "progress": data.get("task_progress", 0.0),
-                    } if data.get("current_task_id") else None,
+                    }
+                    if data.get("current_task_id")
+                    else None,
                     "health": self._assess_health(data),
                     "vendor_specific": {
                         "fetch_state": data.get("robot_state"),

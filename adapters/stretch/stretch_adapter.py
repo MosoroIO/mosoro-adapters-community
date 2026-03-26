@@ -22,14 +22,11 @@ Stretch primarily uses ROS 2 topics/services for control.
 This adapter assumes ROS 2 bridge or direct REST/Websocket access (common in warehouse deployments).
 """
 
-import asyncio
-import logging
 from typing import Any, Dict
 
 # If using ROS 2 bridge, import rclpy here (optional)
 # import rclpy
 # from geometry_msgs.msg import PoseStamped
-
 from mosoro_core.base_adapter import BaseMosoroAdapter
 
 
@@ -49,25 +46,20 @@ class StretchAdapter(BaseMosoroAdapter):
             # TODO: Replace with real ROS 2 subscription or REST call
             # For now, placeholder with realistic structure
             return {
-                "position": {
-                    "x": 15.67,
-                    "y": 8.92,
-                    "theta": 1.57,
-                    "map_id": "warehouse_map_01"
-                },
+                "position": {"x": 15.67, "y": 8.92, "theta": 1.57, "map_id": "warehouse_map_01"},
                 "battery": 76.5,
-                "status": "working",           # idle / moving / working / error
+                "status": "working",  # idle / moving / working / error
                 "current_task": {
                     "task_id": "stretch-pick-456",
                     "task_type": "pick_and_place",
-                    "progress": 30.0
+                    "progress": 30.0,
                 },
                 "health": "good",
                 "vendor_specific": {
                     "arm_extension": 0.85,
                     "gripper_state": "closed",
-                    "base_state": "navigating"
-                }
+                    "base_state": "navigating",
+                },
             }
         except Exception as e:
             self.logger.error(f"Failed to fetch Stretch status: {e}")

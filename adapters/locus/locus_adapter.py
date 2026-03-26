@@ -22,14 +22,10 @@ Locus uses a REST API for status and commands.
 This adapter normalizes Locus data into the common MosoroMessage schema.
 """
 
-import asyncio
-import logging
 from typing import Any, Dict, Optional
 
 import aiohttp
-
 from mosoro_core.base_adapter import BaseMosoroAdapter
-from mosoro_core.models import MosoroMessage
 
 
 class LocusAdapter(BaseMosoroAdapter):
@@ -78,21 +74,23 @@ class LocusAdapter(BaseMosoroAdapter):
                         "x": data.get("x", 0.0),
                         "y": data.get("y", 0.0),
                         "theta": data.get("theta", 0.0),
-                        "map_id": data.get("map_id")
+                        "map_id": data.get("map_id"),
                     },
                     "battery": data.get("battery_level", 0.0),
                     "status": self._map_locus_status(data.get("state", "unknown")),
                     "current_task": {
                         "task_id": data.get("current_task_id"),
                         "task_type": data.get("task_type", "unknown"),
-                        "progress": data.get("task_progress", 0.0)
-                    } if data.get("current_task_id") else None,
+                        "progress": data.get("task_progress", 0.0),
+                    }
+                    if data.get("current_task_id")
+                    else None,
                     "health": "good" if data.get("faults") is None else "warning",
                     "vendor_specific": {
                         "locus_state": data.get("state"),
                         "speed": data.get("speed"),
-                        "load_status": data.get("load_status")
-                    }
+                        "load_status": data.get("load_status"),
+                    },
                 }
         except Exception as e:
             self.logger.error(f"Failed to fetch Locus status: {e}")
@@ -105,7 +103,7 @@ class LocusAdapter(BaseMosoroAdapter):
             "MOVING": "moving",
             "CHARGING": "charging",
             "ERROR": "error",
-            "PAUSED": "idle"
+            "PAUSED": "idle",
         }
         return mapping.get(locus_state.upper(), "idle")
 
@@ -120,17 +118,20 @@ class LocusAdapter(BaseMosoroAdapter):
                 payload = {
                     "x": command["position"]["x"],
                     "y": command["position"]["y"],
-                    "theta": command["position"].get("theta", 0.0)
+                    "theta": command["position"].get("theta", 0.0),
                 }
-                async with self.session.post(f"{self.api_base}/robots/{self.robot_id}/navigate", json=payload) as resp:
+                url = f"{self.api_base}/robots/{self.robot_id}/navigate"
+                async with self.session.post(url, json=payload) as resp:
                     return resp.status == 200
 
             elif action == "pause":
-                async with self.session.post(f"{self.api_base}/robots/{self.robot_id}/pause") as resp:
+                url = f"{self.api_base}/robots/{self.robot_id}/pause"
+                async with self.session.post(url) as resp:
                     return resp.status == 200
 
             elif action == "resume":
-                async with self.session.post(f"{self.api_base}/robots/{self.robot_id}/resume") as resp:
+                url = f"{self.api_base}/robots/{self.robot_id}/resume"
+                async with self.session.post(url) as resp:
                     return resp.status == 200
 
             self.logger.warning(f"Unknown command action: {action}")

@@ -29,15 +29,11 @@ MiR REST API reference:
     PUT  /api/v2.0.0/status          - Change state (e.g., pause/resume)
 """
 
-import asyncio
 import base64
-import logging
 from typing import Any, Dict, Optional
 
 import aiohttp
-
 from mosoro_core.base_adapter import BaseMosoroAdapter
-from mosoro_core.models import MosoroMessage
 
 
 class MirAdapter(BaseMosoroAdapter):
@@ -55,9 +51,7 @@ class MirAdapter(BaseMosoroAdapter):
 
     def _get_auth_header(self) -> str:
         """Generate Basic Auth header for MiR API."""
-        credentials = base64.b64encode(
-            f"{self.username}:{self.password}".encode()
-        ).decode()
+        credentials = base64.b64encode(f"{self.username}:{self.password}".encode()).decode()
         return f"Basic {credentials}"
 
     async def connect(self) -> bool:
@@ -87,9 +81,7 @@ class MirAdapter(BaseMosoroAdapter):
 
         try:
             # MiR status endpoint
-            async with self.session.get(
-                f"{self.api_base}/api/{self.api_version}/status"
-            ) as resp:
+            async with self.session.get(f"{self.api_base}/api/{self.api_version}/status") as resp:
                 if resp.status != 200:
                     self.logger.error(f"MiR API returned {resp.status}")
                     raise Exception(f"HTTP {resp.status}")
@@ -110,7 +102,9 @@ class MirAdapter(BaseMosoroAdapter):
                         "task_id": data.get("mission_queue_id"),
                         "task_type": data.get("mission_text", "unknown"),
                         "progress": self._calculate_progress(data),
-                    } if data.get("mission_queue_id") else None,
+                    }
+                    if data.get("mission_queue_id")
+                    else None,
                     "health": self._assess_health(data),
                     "vendor_specific": {
                         "mir_state_id": data.get("state_id"),
@@ -147,18 +141,18 @@ class MirAdapter(BaseMosoroAdapter):
             12 = Error
         """
         mapping = {
-            1: "idle",       # Starting
-            2: "offline",    # Shutting down
-            3: "idle",       # Ready
-            4: "idle",       # Pause
-            5: "moving",     # Executing
-            6: "error",      # Aborted
-            7: "idle",       # Completed
-            8: "charging",   # Docked
-            9: "moving",     # Docking
-            10: "error",     # Emergency stop
-            11: "working",   # Manual control
-            12: "error",     # Error
+            1: "idle",  # Starting
+            2: "offline",  # Shutting down
+            3: "idle",  # Ready
+            4: "idle",  # Pause
+            5: "moving",  # Executing
+            6: "error",  # Aborted
+            7: "idle",  # Completed
+            8: "charging",  # Docked
+            9: "moving",  # Docking
+            10: "error",  # Emergency stop
+            11: "working",  # Manual control
+            12: "error",  # Error
         }
         return mapping.get(state_id, "idle")
 

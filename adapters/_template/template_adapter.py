@@ -18,7 +18,7 @@ Steps:
     7. Add tests in tests/
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from mosoro_core.base_adapter import BaseMosoroAdapter
 

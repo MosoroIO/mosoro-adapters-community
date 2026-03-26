@@ -11,7 +11,7 @@ interface and produce data compatible with the MosoroPayload schema.
 
 import pytest
 from mosoro_core.base_adapter import BaseMosoroAdapter
-from mosoro_core.models import MosoroPayload, Position
+from mosoro_core.models import MosoroPayload
 
 from adapters.fetch import FetchAdapter
 from adapters.geekplus import GeekplusAdapter
@@ -19,10 +19,10 @@ from adapters.locus import LocusAdapter
 from adapters.mir import MirAdapter
 from adapters.stretch import StretchAdapter
 
-
 # ---------------------------------------------------------------------------
 # Shared contract tests
 # ---------------------------------------------------------------------------
+
 
 class AdapterContractTests:
     """Base test class for adapter contract validation.
@@ -87,6 +87,7 @@ class AdapterContractTests:
 # Per-adapter test classes
 # ---------------------------------------------------------------------------
 
+
 class TestFetchAdapterContract(AdapterContractTests):
     adapter_class = FetchAdapter
 
@@ -125,6 +126,7 @@ class TestStretchAdapterContract(AdapterContractTests):
 # ---------------------------------------------------------------------------
 # Status data validation tests (using Stretch since it has placeholder data)
 # ---------------------------------------------------------------------------
+
 
 class TestStretchStatusData:
     """Test that Stretch adapter's placeholder data validates against MosoroPayload."""
