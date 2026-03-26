@@ -13,8 +13,29 @@ jobs:
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Checkout mosoro-core (dependency not yet on PyPI)
+        uses: actions/checkout@v4
+        with:
+          repository: MosoroIO/mosoro-core
+          path: _mosoro-core
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: pip install -e ".[dev]"
-      - run: pytest tests/ -v
+
+      - name: Install mosoro-core from source
+        run: pip install ./_mosoro-core
+
+      - name: Install package in dev mode
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Run tests
+        run: pytest tests/ -v
