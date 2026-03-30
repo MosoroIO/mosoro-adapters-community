@@ -69,24 +69,16 @@ class StretchAdapter(BaseMosoroAdapter):
         self.rosbridge_port: int = int(config.get("rosbridge_port", 9090))
 
         # Topic names (configurable for different Stretch deployments)
-        self.topic_joint_states: str = config.get(
-            "topic_joint_states", "/stretch/joint_states"
-        )
+        self.topic_joint_states: str = config.get("topic_joint_states", "/stretch/joint_states")
         self.topic_battery: str = config.get("topic_battery", "/battery_state")
         self.topic_odom: str = config.get("topic_odom", "/odom")
-        self.topic_diagnostics: str = config.get(
-            "topic_diagnostics", "/diagnostics_agg"
-        )
+        self.topic_diagnostics: str = config.get("topic_diagnostics", "/diagnostics_agg")
         self.topic_cmd_vel: str = config.get("topic_cmd_vel", "/stretch/cmd_vel")
-        self.topic_navigate: str = config.get(
-            "topic_navigate", "/stretch/navigate_to_pose"
-        )
+        self.topic_navigate: str = config.get("topic_navigate", "/stretch/navigate_to_pose")
         self.topic_joint_trajectory: str = config.get(
             "topic_joint_trajectory", "/stretch/joint_trajectory"
         )
-        self.topic_gripper: str = config.get(
-            "topic_gripper", "/stretch/gripper_command"
-        )
+        self.topic_gripper: str = config.get("topic_gripper", "/stretch/gripper_command")
 
         # roslibpy client and subscribers
         self._ros: Optional[roslibpy.Ros] = None
@@ -108,14 +100,10 @@ class StretchAdapter(BaseMosoroAdapter):
     async def connect(self) -> bool:
         """Establish WebSocket connection to the Stretch rosbridge server."""
         try:
-            self._ros = roslibpy.Ros(
-                host=self.rosbridge_host, port=self.rosbridge_port
-            )
+            self._ros = roslibpy.Ros(host=self.rosbridge_host, port=self.rosbridge_port)
 
             # roslibpy uses a blocking event loop; run it in a background thread
-            self._ros_thread = threading.Thread(
-                target=self._run_ros_connection, daemon=True
-            )
+            self._ros_thread = threading.Thread(target=self._run_ros_connection, daemon=True)
             self._ros_thread.start()
 
             # Wait for connection (with timeout)
@@ -199,9 +187,7 @@ class StretchAdapter(BaseMosoroAdapter):
             self._on_diagnostics,
         )
 
-    def _subscribe(
-        self, topic_name: str, msg_type: str, callback: Any
-    ) -> None:
+    def _subscribe(self, topic_name: str, msg_type: str, callback: Any) -> None:
         """Create a roslibpy subscriber and register the callback."""
         topic = roslibpy.Topic(self._ros, topic_name, msg_type)
         topic.subscribe(callback)
@@ -279,14 +265,10 @@ class StretchAdapter(BaseMosoroAdapter):
             }
 
             # Infer moving status from base velocity
-            linear_speed = math.sqrt(
-                linear_vel.get("x", 0.0) ** 2 + linear_vel.get("y", 0.0) ** 2
-            )
+            linear_speed = math.sqrt(linear_vel.get("x", 0.0) ** 2 + linear_vel.get("y", 0.0) ** 2)
             if linear_speed > 0.05:
                 self._robot_status = self._STATUS_MOVING
-            elif (
-                self._robot_status == self._STATUS_MOVING and linear_speed < 0.01
-            ):
+            elif self._robot_status == self._STATUS_MOVING and linear_speed < 0.01:
                 self._robot_status = self._STATUS_IDLE
 
     def _on_diagnostics(self, message: Dict[str, Any]) -> None:
@@ -321,9 +303,7 @@ class StretchAdapter(BaseMosoroAdapter):
             # Extract arm-specific joint data for vendor_specific
             arm_extension = joints.get("joint_arm_l0", {}).get("position", 0.0)
             wrist_yaw = joints.get("joint_wrist_yaw", {}).get("position", 0.0)
-            gripper_pos = joints.get("joint_gripper_finger_left", {}).get(
-                "position", 0.0
-            )
+            gripper_pos = joints.get("joint_gripper_finger_left", {}).get("position", 0.0)
             lift_pos = joints.get("joint_lift", {}).get("position", 0.0)
             head_pan = joints.get("joint_head_pan", {}).get("position", 0.0)
             head_tilt = joints.get("joint_head_tilt", {}).get("position", 0.0)
@@ -353,12 +333,8 @@ class StretchAdapter(BaseMosoroAdapter):
                     "head_pan": round(head_pan, 4),
                     "head_tilt": round(head_tilt, 4),
                     "base_velocity": {
-                        "linear_x": odom.get("linear_velocity", {}).get(
-                            "x", 0.0
-                        ),
-                        "angular_z": odom.get("angular_velocity", {}).get(
-                            "z", 0.0
-                        ),
+                        "linear_x": odom.get("linear_velocity", {}).get("x", 0.0),
+                        "angular_z": odom.get("angular_velocity", {}).get("z", 0.0),
                     },
                     "battery_voltage": self._battery_state.get("voltage", 0.0),
                     "battery_current": self._battery_state.get("current", 0.0),
@@ -415,9 +391,7 @@ class StretchAdapter(BaseMosoroAdapter):
             return False
 
         action = command.get("action")
-        self.logger.info(
-            f"Sending '{action}' command to Stretch {self.robot_id}"
-        )
+        self.logger.info(f"Sending '{action}' command to Stretch {self.robot_id}")
 
         try:
             if action == "move_to":
@@ -492,9 +466,7 @@ class StretchAdapter(BaseMosoroAdapter):
 
     def _publish_stop(self) -> bool:
         """Publish zero-velocity Twist to stop the base."""
-        topic = roslibpy.Topic(
-            self._ros, self.topic_cmd_vel, "geometry_msgs/Twist"
-        )
+        topic = roslibpy.Topic(self._ros, self.topic_cmd_vel, "geometry_msgs/Twist")
         topic.publish(
             roslibpy.Message(
                 {
@@ -527,9 +499,7 @@ class StretchAdapter(BaseMosoroAdapter):
         # Step 2: Close gripper
         self._publish_gripper_command({"state": "close", "effort": 50.0})
 
-        self.logger.info(
-            f"Pick sequence published: lift={lift_height}, ext={arm_extension}"
-        )
+        self.logger.info(f"Pick sequence published: lift={lift_height}, ext={arm_extension}")
         return True
 
     def _publish_place_sequence(self, command: Dict[str, Any]) -> bool:
@@ -549,9 +519,7 @@ class StretchAdapter(BaseMosoroAdapter):
         # Step 2: Open gripper
         self._publish_gripper_command({"state": "open", "effort": 50.0})
 
-        self.logger.info(
-            f"Place sequence published: lift={lift_height}, ext={arm_extension}"
-        )
+        self.logger.info(f"Place sequence published: lift={lift_height}, ext={arm_extension}")
         return True
 
     def _publish_home_position(self) -> bool:
@@ -565,10 +533,10 @@ class StretchAdapter(BaseMosoroAdapter):
                 "joint_head_tilt",
             ],
             "positions": [
-                0.3,   # lift — low stow position
-                0.0,   # arm — fully retracted
+                0.3,  # lift — low stow position
+                0.0,  # arm — fully retracted
                 3.14,  # wrist — rotated to stow
-                0.0,   # head pan — centered
+                0.0,  # head pan — centered
                 -0.5,  # head tilt — slightly down
             ],
             "duration": 6.0,
@@ -585,9 +553,7 @@ class StretchAdapter(BaseMosoroAdapter):
         duration: float = float(command.get("duration", 4.0))
 
         if not joint_names or len(joint_names) != len(positions):
-            self.logger.error(
-                "joint_names and positions must be non-empty and equal length"
-            )
+            self.logger.error("joint_names and positions must be non-empty and equal length")
             return False
 
         # Convert duration to secs + nsecs
@@ -617,9 +583,7 @@ class StretchAdapter(BaseMosoroAdapter):
             )
         )
         topic.unadvertise()
-        self.logger.debug(
-            f"JointTrajectory published: joints={joint_names}, pos={positions}"
-        )
+        self.logger.debug(f"JointTrajectory published: joints={joint_names}, pos={positions}")
         return True
 
     def _publish_gripper_command(self, command: Dict[str, Any]) -> bool:

@@ -14,19 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout mosoro-core (dependency not yet on PyPI)
-        uses: actions/checkout@v4
-        with:
-          repository: MosoroIO/mosoro-core
-          path: _mosoro-core
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install mosoro-core from source
-        run: pip install ./_mosoro-core
+      - name: Install mosoro-core from source (public repo, not yet on PyPI)
+        run: pip install "git+https://github.com/MosoroIO/mosoro-core.git@main"
 
       - name: Install package in dev mode
         run: pip install -e ".[dev]"
