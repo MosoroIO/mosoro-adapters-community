@@ -44,7 +44,11 @@ import math
 import threading
 from typing import Any, Dict, List, Optional
 
-import roslibpy  # External dependency — install separately: pip install roslibpy
+try:
+    import roslibpy
+except ImportError:
+    roslibpy = None  # type: ignore[assignment]  # Deferred: only needed at runtime
+
 from mosoro_core.base_adapter import BaseMosoroAdapter
 
 
@@ -81,8 +85,8 @@ class StretchAdapter(BaseMosoroAdapter):
         self.topic_gripper: str = config.get("topic_gripper", "/stretch/gripper_command")
 
         # roslibpy client and subscribers
-        self._ros: Optional[roslibpy.Ros] = None
-        self._subscribers: List[roslibpy.Topic] = []
+        self._ros: Any = None
+        self._subscribers: List[Any] = []
         self._ros_thread: Optional[threading.Thread] = None
 
         # Cached latest data from ROS subscriptions (thread-safe via lock)
@@ -99,6 +103,11 @@ class StretchAdapter(BaseMosoroAdapter):
 
     async def connect(self) -> bool:
         """Establish WebSocket connection to the Stretch rosbridge server."""
+        if roslibpy is None:
+            raise ImportError(
+                "roslibpy is required for the Stretch adapter. "
+                "Install it with: pip install roslibpy"
+            )
         try:
             self._ros = roslibpy.Ros(host=self.rosbridge_host, port=self.rosbridge_port)
 
