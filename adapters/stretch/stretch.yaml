@@ -10,7 +10,7 @@ vendor: "stretch"
 
 # rosbridge WebSocket connection (Stretch uses ROS 2 via rosbridge_server)
 # Start rosbridge on the Stretch: ros2 launch rosbridge_server rosbridge_websocket_launch.xml
-rosbridge_host: "192.168.1.101"
+rosbridge_host: "YOUR_STRETCH_HOST"
 rosbridge_port: 9090
 
 # Map identifier for position reporting

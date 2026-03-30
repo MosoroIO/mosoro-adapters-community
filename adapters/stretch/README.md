@@ -83,7 +83,7 @@ robot_id: "stretch-001"
 vendor: "stretch"
 
 # rosbridge WebSocket connection
-rosbridge_host: "192.168.1.101"   # IP address of the Stretch robot
+rosbridge_host: "YOUR_STRETCH_HOST"   # IP address of the Stretch robot
 rosbridge_port: 9090              # Default rosbridge WebSocket port
 
 # ROS 2 topic names (adjust for your namespace)

@@ -3,7 +3,7 @@ robot_id: "geekplus-001"
 vendor: "geekplus"
 
 # Geekplus / Seer connection details
-api_base_url: "http://192.168.1.150:8080"
+api_base_url: "http://YOUR_GEEKPLUS_HOST:8080"
 api_key: "your-geekplus-api-key-here"
 
 # MQTT settings (production: TLS on port 8883)

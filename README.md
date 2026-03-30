@@ -31,7 +31,7 @@ Once installed, configure your agent with the vendor name:
 # config.yaml
 robot_id: "fetch-001"
 vendor: "fetch"
-api_base_url: "http://192.168.1.210:8080"
+api_base_url: "http://YOUR_ROBOT_HOST:8080"
 api_key: "your-api-key"
 ```
 

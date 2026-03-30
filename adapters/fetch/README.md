@@ -20,7 +20,7 @@ Copy `fetch.yaml` to your agent config directory and update:
 ```yaml
 robot_id: "fetch-001"
 vendor: "fetch"
-api_base_url: "http://192.168.1.210:8080"
+api_base_url: "http://YOUR_FETCH_HOST:8080"
 api_key: "your-fetch-api-key-here"
 api_version: "v1"
 ```

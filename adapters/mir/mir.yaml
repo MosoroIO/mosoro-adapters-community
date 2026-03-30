@@ -3,7 +3,7 @@ robot_id: "mir-001"
 vendor: "mir"
 
 # MiR connection details (REST API with Basic Auth)
-api_base_url: "http://192.168.1.200:8080"
+api_base_url: "http://YOUR_MIR_HOST:8080"
 username: "admin"
 password: "your-mir-password-here"
 api_version: "v2.0.0"
