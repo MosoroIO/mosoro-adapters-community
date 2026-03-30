@@ -1,12 +1,30 @@
 # Mosoro Edge Agent Configuration - Boston Dynamics Stretch
+#
+# Dependency: This adapter requires the `roslibpy` Python library.
+#   pip install roslibpy
+# The Stretch robot must be running `rosbridge_server` (part of rosbridge_suite).
+# See README.md in this directory for full setup instructions.
+
 robot_id: "stretch-001"
 vendor: "stretch"
 
-# Stretch connection details (adjust based on your deployment)
-# Option A: If using ROS 2 bridge
-ros_bridge_url: "http://192.168.1.101:9090"
-# Option B: If using REST/HTTP wrapper (common in warehouses)
-api_base_url: "http://192.168.1.101:5000"
+# rosbridge WebSocket connection (Stretch uses ROS 2 via rosbridge_server)
+# Start rosbridge on the Stretch: ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+rosbridge_host: "192.168.1.101"
+rosbridge_port: 9090
+
+# Map identifier for position reporting
+map_id: "warehouse_map_01"
+
+# ROS 2 topic names (adjust if your Stretch uses a different namespace)
+topic_joint_states: "/stretch/joint_states"
+topic_battery: "/battery_state"
+topic_odom: "/odom"
+topic_diagnostics: "/diagnostics_agg"
+topic_cmd_vel: "/stretch/cmd_vel"
+topic_navigate: "/stretch/navigate_to_pose"
+topic_joint_trajectory: "/stretch/joint_trajectory"
+topic_gripper: "/stretch/gripper_command"
 
 # MQTT settings (production: TLS on port 8883)
 mqtt_broker: "mosquitto"

@@ -1,5 +1,8 @@
 # Mosoro Community Adapters
 
+[![CI](https://github.com/mosoroio/mosoro-adapters-community/actions/workflows/ci.yml/badge.svg)](https://github.com/mosoroio/mosoro-adapters-community/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 Community-contributed robot adapters for [Mosoro Core](https://github.com/mosoroio/mosoro-core).
 
 ## Available Adapters
