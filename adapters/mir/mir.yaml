@@ -1,9 +1,10 @@
+# Tip: Use `make setup` in mosoro-core to configure this automatically
 # Mosoro Edge Agent Configuration - MiR (Mobile Industrial Robots)
 robot_id: "mir-001"
 vendor: "mir"
 
 # MiR connection details (REST API with Basic Auth)
-api_base_url: "http://YOUR_MIR_HOST:8080"
+api_base_url: "http://${MIR_HOST:-localhost}:8080"
 username: "admin"
 password: "your-mir-password-here"
 api_version: "v2.0.0"

@@ -4,24 +4,28 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mosoro-adapters-community"
-version = "0.1.0"
-description = "Community-contributed robot adapters for Mosoro Core"
+version = "1.0.0"
+description = "Meta-package: installs all community robot adapters for Mosoro Core"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.11"
 authors = [{name = "Mosoro Community"}]
 dependencies = [
-    "mosoro-core>=1.0.0",
-    "aiohttp>=3.9.0",
+    "mosoro-adapter-locus>=1.0.0",
+    "mosoro-adapter-mir>=1.0.0",
+    "mosoro-adapter-fetch>=1.0.0",
+    "mosoro-adapter-geekplus>=1.0.0",
+    "mosoro-adapter-stretch>=1.0.0",
 ]
 
 [project.optional-dependencies]
-stretch = ["roslibpy>=1.4.0"]
 dev = ["pytest>=8.0.0", "pytest-asyncio>=0.23.0", "ruff>=0.4.0", "roslibpy>=1.4.0"]
 
 [project.urls]
 Repository = "https://github.com/mosoroio/mosoro-adapters-community"
 
+# Entry points kept for backward compatibility when installing the meta-package
+# directly. Individual adapter packages also register their own entry points.
 [project.entry-points."mosoro.adapters"]
 fetch = "adapters.fetch:FetchAdapter"
 geekplus = "adapters.geekplus:GeekplusAdapter"

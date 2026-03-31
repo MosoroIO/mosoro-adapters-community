@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mosoro-adapter-stretch"
+version = "1.0.0"
+description = "Boston Dynamics Stretch adapter for Mosoro (ROS 2 rosbridge)"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+dependencies = [
+    "mosoro-core>=1.0.0",
+    "roslibpy>=1.4.0",
+]
+
+[project.entry-points."mosoro.adapters"]
+stretch = "adapters.stretch:StretchAdapter"

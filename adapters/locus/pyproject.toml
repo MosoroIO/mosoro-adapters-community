@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mosoro-adapter-locus"
+version = "1.0.0"
+description = "Locus Robotics adapter for Mosoro"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+dependencies = [
+    "mosoro-core>=1.0.0",
+    "aiohttp>=3.9.0",
+]
+
+[project.entry-points."mosoro.adapters"]
+locus = "adapters.locus:LocusAdapter"

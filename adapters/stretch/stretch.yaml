@@ -1,3 +1,4 @@
+# Tip: Use `make setup` in mosoro-core to configure this automatically
 # Mosoro Edge Agent Configuration - Boston Dynamics Stretch
 #
 # Dependency: This adapter requires the `roslibpy` Python library.
@@ -10,7 +11,7 @@ vendor: "stretch"
 
 # rosbridge WebSocket connection (Stretch uses ROS 2 via rosbridge_server)
 # Start rosbridge on the Stretch: ros2 launch rosbridge_server rosbridge_websocket_launch.xml
-rosbridge_host: "YOUR_STRETCH_HOST"
+rosbridge_host: "${STRETCH_HOST:-localhost}"
 rosbridge_port: 9090
 
 # Map identifier for position reporting
