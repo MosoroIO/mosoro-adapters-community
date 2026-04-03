@@ -39,7 +39,10 @@ class LocusAdapter(BaseMosoroAdapter):
         locus_host = os.environ.get("LOCUS_HOST", "localhost")
         locus_port = os.environ.get("LOCUS_PORT", "8080")
         default_base = f"http://{locus_host}:{locus_port}/api"
-        self.api_base = config.get("api_base_url", default_base)
+        # Use YAML value only if explicitly set and non-empty; env vars are the
+        # preferred configuration mechanism so customers don't have to edit files.
+        yaml_base = config.get("api_base_url") or ""
+        self.api_base = os.path.expandvars(yaml_base) if yaml_base else default_base
         self.api_key = config.get("api_key") or os.environ.get("LOCUS_API_KEY")
         self.session: Optional[aiohttp.ClientSession] = None
 

@@ -4,11 +4,12 @@ robot_id: "locus-001"
 vendor: "locus"
 
 # Locus-specific connection details
-# api_base_url is optional — if omitted, LOCUS_HOST and LOCUS_PORT env vars are used.
-# Defaults to http://localhost:8080/api if neither is set.
-api_base_url: "http://localhost:8080/api"
-# api_key is optional — LOCUS_API_KEY env var is used as fallback.
-api_key: ""
+# Leave api_base_url commented out to use LOCUS_HOST / LOCUS_PORT env vars.
+# Uncomment and set explicitly to override env vars.
+# api_base_url: "http://192.168.1.50:8080/api"
+
+# Leave api_key commented out to use LOCUS_API_KEY env var.
+# api_key: "your-api-key-here"
 
 # MQTT settings (production: TLS on port 8883)
 mqtt_broker: "mosquitto"
