@@ -7,7 +7,7 @@ name = "mosoro-adapter-stretch"
 version = "1.0.0"
 description = "Boston Dynamics Stretch adapter for Mosoro (ROS 2 rosbridge)"
 license = {text = "Apache-2.0"}
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 dependencies = [
     "mosoro-core>=1.0.0",
     "roslibpy>=1.4.0",
