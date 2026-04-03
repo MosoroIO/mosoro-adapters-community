@@ -22,6 +22,7 @@ Locus uses a REST API for status and commands.
 This adapter normalizes Locus data into the common MosoroMessage schema.
 """
 
+import os
 from typing import Any, Dict, Optional
 
 import aiohttp
@@ -35,8 +36,11 @@ class LocusAdapter(BaseMosoroAdapter):
 
     def __init__(self, robot_id: str, config: Dict[str, Any]):
         super().__init__(robot_id, config)
-        self.api_base = config.get("api_base_url", "http://localhost:8080")
-        self.api_key = config.get("api_key")
+        locus_host = os.environ.get("LOCUS_HOST", "localhost")
+        locus_port = os.environ.get("LOCUS_PORT", "8080")
+        default_base = f"http://{locus_host}:{locus_port}/api"
+        self.api_base = config.get("api_base_url", default_base)
+        self.api_key = config.get("api_key") or os.environ.get("LOCUS_API_KEY")
         self.session: Optional[aiohttp.ClientSession] = None
 
     async def connect(self) -> bool:
